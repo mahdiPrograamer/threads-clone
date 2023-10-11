@@ -19,6 +19,7 @@ import { Button } from "../ui/button";
 
 import { CommentValidation } from "@/lib/validation/thread";
 import { addCommentToThread } from "@/lib/actions/thread.actions";
+import { useState } from "react";
 
 interface Props {
   threadId: string;
@@ -28,6 +29,7 @@ interface Props {
 
 function Comment({ threadId, currentUserImg, currentUserId }: Props) {
   const pathname = usePathname();
+  const [disable, setDisable] = useState(false);
 
   const form = useForm<z.infer<typeof CommentValidation>>({
     resolver: zodResolver(CommentValidation),
@@ -37,12 +39,20 @@ function Comment({ threadId, currentUserImg, currentUserId }: Props) {
   });
 
   const onSubmit = async (values: z.infer<typeof CommentValidation>) => {
-    await addCommentToThread(
-      threadId,
-      values.thread,
-      JSON.parse(currentUserId),
-      pathname
-    );
+    setDisable(true);
+
+    try {
+      await addCommentToThread(
+        threadId,
+        values.thread,
+        JSON.parse(currentUserId),
+        pathname
+      );
+      setDisable(false);
+    } catch (err) {
+      console.log(err);
+      setDisable(false);
+    }
 
     form.reset();
   };
@@ -76,7 +86,7 @@ function Comment({ threadId, currentUserImg, currentUserId }: Props) {
           )}
         />
 
-        <Button type="submit" className="comment-form_btn">
+        <Button type="submit" className="comment-form_btn" disabled={disable}>
           Reply
         </Button>
       </form>

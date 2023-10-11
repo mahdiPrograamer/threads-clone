@@ -39,6 +39,7 @@ interface Props {
 const AcountProfile = ({ user, btnTitle }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
   const { startUpload } = useUploadThing("media");
+  const [disable, setDisable] = useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -61,19 +62,25 @@ const AcountProfile = ({ user, btnTitle }: Props) => {
     if (!hasImageChanged) {
       const imgRes = await startUpload(files);
 
-      if (imgRes && imgRes[0].fileUrl) {
+      if (imgRes && imgRes[0] && imgRes[0].fileUrl) {
         values.profile_photo = imgRes[0].fileUrl;
       }
     }
-
-    await updateUser({
-      name: values.name,
-      path: pathname,
-      username: values.username,
-      userId: user.id,
-      bio: values.bio,
-      image: values.profile_photo,
-    });
+    setDisable(true);
+    try {
+      await updateUser({
+        name: values.name,
+        path: pathname,
+        username: values.username,
+        userId: user.id,
+        bio: values.bio,
+        image: values.profile_photo,
+      });
+      setDisable(false);
+    } catch (err) {
+      console.log(err);
+      setDisable(false);
+    }
 
     if (pathname === "/profile/edit") {
       router.back();
@@ -214,7 +221,7 @@ const AcountProfile = ({ user, btnTitle }: Props) => {
           )}
         />
 
-        <Button type="submit" className="bg-primary-500">
+        <Button type="submit" className="bg-primary-500" disabled={disable}>
           Submit
         </Button>
       </form>

@@ -19,7 +19,7 @@ async function Page() {
     image: userInfo ? userInfo?.image : user.imageUrl,
   };
   return (
-    <main className="mx-auto flex max-w-3xl flex-col justify-center px-10 py-20">
+    <main className="mx-auto flex max-w-3xl flex-col justify-center px-10 py-5">
       <h1 className="head-text">Onboarding</h1>
 
       <p className="mt-3 text-base-regular text-light-2">
