@@ -31,7 +31,7 @@ async function Page() {
                     <article className="activity-card">
                       <Link
                         key={activity._id}
-                        href={`/profile/${activity.user._id}`}
+                        href={`/profile/${activity.author._id}`}
                       >
                         <Image
                           src={activity.author.image}
@@ -44,7 +44,7 @@ async function Page() {
                       <p className="!text-small-regular text-light-1">
                         <Link
                           key={activity._id}
-                          href={`/profile/${activity.user._id}`}
+                          href={`/profile/${activity.author._id}`}
                         >
                           <span className="mr-1 text-primary-500">
                             {activity.author.name}
